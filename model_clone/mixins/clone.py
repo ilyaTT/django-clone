@@ -6,7 +6,7 @@ from conditional import conditional
 from django.core.checks import Error
 from django.core.exceptions import ValidationError
 from django.db import transaction, models, IntegrityError, connections
-from django.db.models import SlugField
+from django.db.models import SlugField, Model
 from django.db.models.base import ModelBase
 from django.utils.text import slugify
 
@@ -21,7 +21,7 @@ class CloneMetaClass(abc.ABCMeta, ModelBase):
     pass
 
 
-class CloneMixin(six.with_metaclass(CloneMetaClass)):
+class CloneMixin(six.with_metaclass(CloneMetaClass, Model)):
     """
     CloneMixin mixin to duplicate an object using the model cls.
 
@@ -72,6 +72,9 @@ class CloneMixin(six.with_metaclass(CloneMetaClass)):
             o2m fields.
         _clone_excluded_one_to_one_fields (list): Excluded one to one fields.
     """
+    class Meta:
+        abstract = True
+
     # TODO: Move these to use succient
     # names m2m_clone_fields -> many_to_many, m2o_o2m_clone_fields = []
 
